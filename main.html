@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class of 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@600&amp;display=swap');
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .heading {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 600;
+        }
+
+        .yearbook-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #1e2937;
+        }
+        
+        .yearbook-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+        }
+
+        .photo-placeholder {
+            background: linear-gradient(135deg, #334155 0%, #475569 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .photo-placeholder::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 35% 25%, rgba(255,255,255,0.12) 0%, transparent 60%);
+        }
+
+        .profile-initials {
+            font-family: 'Playfair Display', Georgia, serif;
+            letter-spacing: -1px;
+        }
+
+        .quote-text {
+            font-size: 0.95rem;
+            line-height: 1.45;
+            color: #cbd5e1;
+        }
+
+        .student-name {
+            color: #f1f5f9;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+
+        .dark-bg {
+            background-color: #0f172a;
+        }
+
+        .section-bg {
+            background-color: #020617;
+        }
+
+        .modal {
+            animation: modalPop 0.2s ease-out forwards;
+        }
+
+        @keyframes modalPop {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body class="dark-bg text-slate-200">
+    <!-- Simple Navbar -->
+    <nav class="border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="h-16 flex items-center justify-between">
+                <div class="flex items-center gap-x-3">
+                    <div class="w-8 h-8 bg-slate-700 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-book text-slate-300 text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-semibold tracking-tight text-xl">Yearbook</span>
+                        <span class="text-slate-500 text-sm ml-1">2026</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-x-3">
+                    <!-- Search -->
+                    <div class="relative w-72 hidden sm:block">
+                        <input 
+                            id="search-input"
+                            type="text" 
+                            placeholder="Search names or quotes..." 
+                            onkeyup="filterCards()"
+                            class="w-full bg-slate-900 border border-slate-700 focus:border-slate-500 rounded-2xl pl-10 py-2 text-sm placeholder:text-slate-500 focus:outline-none"
+                        >
+                        <i class="fa-solid fa-search absolute left-4 top-2.5 text-slate-500"></i>
+                    </div>
+
+                    <button onclick="scrambleStudents()"
+                            class="px-5 py-2 rounded-2xl bg-slate-700 hover:bg-slate-600 transition-colors text-sm font-medium flex items-center gap-x-2">
+                        <i class="fa-solid fa-shuffle text-xs"></i>
+                        <span>Scramble</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Minimal Hero -->
+    <div class="max-w-7xl mx-auto px-6 pt-14 pb-10">
+        <div class="max-w-md">
+            <div class="uppercase tracking-[3px] text-xs text-slate-500 mb-2">NMIMS MBA Tech Computers </div>
+            <div class="uppercase tracking-[3px] text-xs text-slate-500 mb-2">Division E</div>
+            <h1 class="text-6xl heading tracking-tighter">Class of 2026</h1>
+            <p class="mt-3 text-lg text-slate-400">A collection of faces, voices, and moments.</p>
+        </div>
+    </div>
+
+    <!-- Grid of Students -->
+    <div class="max-w-7xl mx-auto px-6 pb-20">
+        <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- Simple Footer -->
+    <footer class="border-t border-slate-800 py-8">
+        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-slate-500">
+           Made by Apoorv.
+        </div>
+    </footer>
+
+    <!-- Simple Profile Modal -->
+    <div id="modal" onclick="if (event.target.id === 'modal') closeModal()" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-5">
+        <div onclick="event.stopImmediatePropagation()" class="modal bg-slate-900 rounded-3xl w-full max-w-sm overflow-hidden border border-slate-700">
+            <div class="p-8">
+                <div id="modal-photo" 
+                     class="w-28 h-28 mx-auto rounded-full flex items-center justify-center photo-placeholder mb-6">
+                </div>
+                
+                <div id="modal-name" class="text-center text-2xl font-semibold tracking-tight mb-1"></div>
+                
+                <div class="text-center">
+                    <div id="modal-quote" class="text-slate-300 text-[15px] leading-relaxed italic mt-4"></div>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-700 px-8 py-4 flex justify-end">
+                <button onclick="closeModal()" 
+                        class="px-6 py-2 text-sm text-slate-400 hover:text-slate-200 transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple placeholder data — easy to edit
+        const students = [
+            {
+                id: 1,
+                name: "Maya Chen",
+                initials: "MC",
+                quote: "Placeholder"
+            },
+            {
+                id: 2,
+                name: "Liam Patel",
+                initials: "LP",
+                quote: "Placeholder"
+            },
+            {
+                id: 3,
+                name: "Isabella Torres",
+                initials: "IT",
+                quote: "Placeholder"
+            },
+            {
+                id: 4,
+                name: "Noah Kim",
+                initials: "NK",
+                quote: "Placeholder"
+            },
+            {
+                id: 5,
+                name: "Ava Rodriguez",
+                initials: "AR",
+                quote: "Placeholder"
+            },
+            {
+                id: 6,
+                name: "Ethan Morales",
+                initials: "EM",
+                quote: "Placeholder"
+            },
+            {
+                id: 7,
+                name: "Olivia Bennett",
+                initials: "OB",
+                quote: "Placeholder"
+            },
+            {
+                id: 8,
+                name: "Jackson Reyes",
+                initials: "JR",
+                quote: "Placeholder"
+            },
+            {
+                id: 9,
+                name: "Sophia Nguyen",
+                initials: "SN",
+                quote: "Placeholder"
+            },
+            {
+                id: 10,
+                name: "Lucas Rivera",
+                initials: "LR",
+                quote: "Placeholder"
+            },
+            {
+                id: 11,
+                name: "Mia Thompson",
+                initials: "MT",
+                quote: "Placeholder"
+            },
+            {
+                id: 12,
+                name: "Alexander Wright",
+                initials: "AW",
+                quote: "Placeholder"
+            }
+        ];
+
+        let currentStudentId = null;
+
+        function renderCards(filteredStudents) {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+
+            const list = filteredStudents || students;
+
+            list.forEach(student => {
+                const card = document.createElement('div');
+                card.className = `yearbook-card rounded-3xl overflow-hidden border border-slate-700 cursor-pointer group`;
+
+                card.innerHTML = `
+                    <div class="p-5 pb-6">
+                        <!-- Photo Placeholder -->
+                        <div class="photo-placeholder w-full aspect-square rounded-2xl flex items-center justify-center mb-5">
+                            <div class="w-20 h-20 rounded-full bg-slate-800/60 flex items-center justify-center border border-slate-600/50">
+                                <span class="profile-initials text-slate-200 text-4xl font-semibold tracking-[-2px]">${student.initials}</span>
+                            </div>
+                        </div>
+
+                        <!-- Name -->
+                        <div class="student-name text-xl mb-2 tracking-tight">${student.name}</div>
+
+                        <!-- Quote directly below photo -->
+                        <div class="quote-text">
+                            “${student.quote}”
+                        </div>
+                    </div>
+                `;
+
+                card.onclick = () => showModal(student.id);
+                grid.appendChild(card);
+            });
+        }
+
+        function scrambleStudents() {
+            for (let i = students.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [students[i], students[j]] = [students[j], students[i]];
+            }
+            renderCards(students);
+        }
+
+        function filterCards() {
+            const term = document.getElementById('search-input').value.toLowerCase().trim();
+            
+            if (!term) {
+                renderCards(students);
+                return;
+            }
+
+            const filtered = students.filter(s => 
+                s.name.toLowerCase().includes(term) || 
+                s.quote.toLowerCase().includes(term)
+            );
+
+            renderCards(filtered);
+        }
+
+        function showModal(id) {
+            const student = students.find(s => s.id === id);
+            if (!student) return;
+
+            currentStudentId = id;
+
+            document.getElementById('modal-name').textContent = student.name;
+            document.getElementById('modal-quote').innerHTML = `“${student.quote}”`;
+
+            const photo = document.getElementById('modal-photo');
+            photo.innerHTML = `
+                <span class="profile-initials text-slate-200 text-[42px] font-semibold tracking-[-2.5px]">${student.initials}</span>
+            `;
+
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            currentStudentId = null;
+        }
+
+        function init() {
+            scrambleStudents();
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const sign = document.getElementById('sign-modal');
+                    const main = document.getElementById('modal');
+
+                    if (!sign.classList.contains('hidden')) {
+                        closeSignModal();
+                    } else if (!main.classList.contains('hidden')) {
+                        closeModal();
+                    }
+                }
+
+                if (e.key === '/' && document.activeElement.tagName === 'BODY') {
+                    e.preventDefault();
+                    document.getElementById('search-input').focus();
+                }
+            });
+
+            // Sync search placeholder hint
+            console.log('%c[Yearbook] Simple showcase version ready. Edit the students array to customize.', 'color:#64748b');
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
