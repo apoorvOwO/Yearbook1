@@ -3,55 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>First Yearbook 2026</title>
+    <title>First Yearbook 2026 • NMIMS MBA Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Inline critical styles for immediate load */
+        .dark-bg { background-color: #020617; }
+    </style>
 </head>
 <body class="dark-bg text-slate-200">
-    <!-- Simple Navbar -->
-    <nav class="border-b border-slate-800">
+    <!-- Navbar -->
+    <nav class="border-b border-slate-800 sticky top-0 z-40 bg-[#020617]/95 backdrop-blur-lg">
         <div class="max-w-7xl mx-auto px-6">
             <div class="h-16 flex items-center justify-between">
                 <div class="flex items-center gap-x-3">
-                    <div class="w-8 h-8 bg-slate-700 rounded-xl flex items-center justify-center">
-                        <i class="fa-solid fa-book text-slate-300 text-lg"></i>
+                    <div class="w-9 h-9 bg-slate-700 rounded-2xl flex items-center justify-center shadow-inner">
+                        <i class="fa-solid fa-book text-slate-300 text-xl"></i>
                     </div>
                     <div>
-                        <span class="font-semibold tracking-tight text-xl">Yearbook</span>
-                        <span class="text-slate-500 text-sm ml-1">2026</span>
+                        <span class="font-semibold tracking-tighter text-2xl">Yearbook</span>
+                        <span class="text-slate-500 text-sm ml-1.5">2026</span>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-x-3">
                     <!-- Search -->
-                    <div class="relative w-72 hidden sm:block">
+                    <div class="relative w-72 hidden md:block">
                         <input 
                             id="search-input"
                             type="text" 
                             placeholder="Search names or quotes..." 
                             onkeyup="filterCards()"
-                            class="w-full bg-slate-900 border border-slate-700 focus:border-slate-500 rounded-2xl pl-10 py-2 text-sm placeholder:text-slate-500 focus:outline-none"
+                            class="w-full bg-slate-900 border border-slate-700 focus:border-slate-500 rounded-3xl pl-11 py-2.5 text-sm placeholder:text-slate-500 focus:outline-none transition-all"
                         >
-                        <i class="fa-solid fa-search absolute left-4 top-2.5 text-slate-500"></i>
+                        <i class="fa-solid fa-search absolute left-4 top-3 text-slate-500"></i>
                     </div>
 
                     <button onclick="scrambleStudents()"
-                            class="px-5 py-2 rounded-2xl bg-slate-700 hover:bg-slate-600 transition-colors text-sm font-medium flex items-center gap-x-2">
+                            class="px-5 py-2 rounded-3xl bg-slate-800 hover:bg-slate-700 transition-all text-sm font-medium flex items-center gap-x-2 border border-slate-700 control-btn">
                         <i class="fa-solid fa-shuffle text-xs"></i>
-                        <span>Scramble</span>
+                        <span class="hidden sm:inline">Scramble</span>
+                    </button>
+
+                    <button onclick="surpriseMe()"
+                            class="px-4 py-2 rounded-3xl bg-slate-800 hover:bg-slate-700 transition-all text-sm font-medium flex items-center gap-x-2 border border-slate-700 control-btn"
+                            title="Open a random profile">
+                        <i class="fa-solid fa-magic text-xs"></i>
+                        <span class="hidden sm:inline">Surprise</span>
                     </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Minimal Hero -->
-    <div class="max-w-7xl mx-auto px-6 pt-14 pb-10">
-        <div class="max-w-md">
-            <div class="uppercase tracking-[3px] text-xs text-slate-500 mb-2">NMIMS MBA Tech Computers</div>
-            <div class="uppercase tracking-[3px] text-xs text-slate-500 mb-2">First Year Batch 2026</div>
-            <h1 class="text-6xl heading tracking-tighter">First Yearbook</h1>
+    <!-- Hero -->
+    <div class="max-w-7xl mx-auto px-6 pt-16 pb-8">
+        <div class="max-w-lg">
+            <div class="flex items-center gap-x-2 mb-3">
+                <div class="uppercase tracking-[4px] text-xs text-slate-500">NMIMS • MBA Tech Computers</div>
+                <div class="h-px flex-1 bg-slate-800"></div>
+            </div>
+            <h1 class="text-6xl md:text-7xl heading tracking-tighter text-white">First Yearbook</h1>
+            <p class="mt-3 text-lg text-slate-400">Class of 2026 • Capturing our beginning together</p>
+        </div>
+    </div>
+
+    <!-- Toolbar / Stats & Controls -->
+    <div class="max-w-7xl mx-auto px-6 pb-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-y-4 gap-x-6">
+            <div class="flex items-baseline gap-x-3">
+                <div class="text-3xl font-semibold tabular-nums" id="student-count">16</div>
+                <div class="text-slate-400 text-sm leading-tight">students<br>exploring together</div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+                <!-- Sort -->
+                <div class="flex items-center gap-x-2 text-sm">
+                    <span class="text-slate-500 hidden md:inline">Sort</span>
+                    <select id="sort-select" onchange="applySortAndRender()" class="font-medium">
+                        <option value="name-asc">Name A → Z</option>
+                        <option value="name-desc">Name Z → A</option>
+                        <option value="shuffle">Shuffled</option>
+                    </select>
+                </div>
+
+                <!-- Favorites Toggle -->
+                <button onclick="toggleFavoritesFilter()"
+                        id="fav-filter-btn"
+                        class="px-4 py-2 rounded-3xl text-sm font-medium flex items-center gap-x-2 border border-slate-700 hover:bg-slate-800 transition-all control-btn">
+                    <i class="fa-solid fa-heart text-xs"></i>
+                    <span>Favorites</span>
+                    <span id="fav-count" class="ml-1 px-1.5 py-px text-[10px] rounded-full bg-slate-700 tabular-nums">0</span>
+                </button>
+
+                <!-- Actions -->
+                <button onclick="printYearbook()"
+                        class="px-4 py-2 rounded-3xl bg-slate-800 hover:bg-slate-700 text-sm font-medium flex items-center gap-x-2 border border-slate-700 control-btn">
+                    <i class="fa-solid fa-print text-xs"></i>
+                    <span class="hidden sm:inline">Print</span>
+                </button>
+
+                <button onclick="resetCustomizations()"
+                        class="px-4 py-2 rounded-3xl bg-slate-800 hover:bg-red-950/60 text-sm font-medium flex items-center gap-x-2 border border-slate-700 hover:border-red-900/50 control-btn"
+                        title="Clear saved favorites and edited quotes">
+                    <i class="fa-solid fa-undo text-xs"></i>
+                    <span class="hidden sm:inline">Reset</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -60,45 +119,113 @@
         <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5">
             <!-- Populated by JS -->
         </div>
+        
+        <div id="empty-state" class="hidden text-center py-12">
+            <i class="fa-solid fa-heart text-4xl text-slate-700 mb-4"></i>
+            <p class="text-slate-400">No favorited students yet.<br>Tap the heart on any profile to start your collection.</p>
+        </div>
     </div>
 
-    <!-- Simple Footer -->
+    <!-- Footer -->
     <footer class="border-t border-slate-800 py-8">
-        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-slate-500">
-           Made by Samosa Shukla.
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="text-xs text-slate-500">
+                Made by Samosa Shukla • Interactive edition for the Class of 2026
+            </div>
+            <div class="text-[10px] text-slate-600 mt-1">Quotes &amp; favorites persist in your browser • Add photos to the Pictures folder to personalize</div>
         </div>
     </footer>
 
-    <!-- Landing notification dialog -->
+    <!-- Welcome Dialog -->
     <div id="welcome-dialog" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-5">
-        <div class="w-full max-w-md rounded-3xl border border-slate-700 bg-slate-950/95 p-7 text-center shadow-2xl shadow-slate-950/40">
-            <h2 class="text-2xl font-semibold text-slate-100">Yearbook is still a work in progress</h2>
-            <p class="mt-4 text-slate-400">This first-year college yearbook is being built as you explore students and profiles.</p>
-            <p id="welcome-countdown" class="mt-4 text-sm text-slate-500">Button activates in 3 seconds...</p>
-            <button id="welcome-ok" disabled class="mt-7 inline-flex items-center justify-center rounded-2xl bg-slate-700 px-6 py-3 text-sm font-medium text-slate-200 transition duration-200 disabled:cursor-not-allowed disabled:bg-slate-600/60 hover:bg-slate-600">
-                I understand
+        <div class="w-full max-w-md rounded-3xl border border-slate-700 bg-slate-950/95 p-8 text-center shadow-2xl">
+            <div class="mx-auto w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center mb-5">
+                <i class="fa-solid fa-book text-2xl text-slate-400"></i>
+            </div>
+            <h2 class="text-2xl font-semibold tracking-tight">Welcome to the First Yearbook</h2>
+            <p class="mt-3 text-slate-400 text-[15px]">This living yearbook lets you explore profiles, edit quotes, favorite classmates, and print your own copy. Everything saves automatically in your browser.</p>
+            
+            <div class="mt-6 text-left text-xs bg-slate-900/70 border border-slate-800 rounded-2xl p-4 text-slate-400">
+                <div class="flex gap-2 items-start">
+                    <i class="fa-solid fa-info-circle mt-0.5 text-slate-500"></i>
+                    <div>Photos will appear once added to the <span class="font-mono text-slate-300">Pictures/</span> folder with matching filenames.</div>
+                </div>
+            </div>
+
+            <p id="welcome-countdown" class="mt-6 text-sm text-slate-500">Ready in a moment...</p>
+            <button id="welcome-ok" disabled 
+                    class="mt-5 inline-flex items-center justify-center rounded-3xl bg-white px-8 py-3 text-sm font-semibold text-slate-950 transition disabled:bg-slate-300 disabled:text-slate-500 hover:bg-slate-100">
+                Begin exploring
             </button>
         </div>
     </div>
 
-    <!-- Simple Profile Modal -->
-    <div id="modal" onclick="if (event.target.id === 'modal') closeModal()" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-5">
-        <div onclick="event.stopImmediatePropagation()" class="modal rounded-3xl w-full max-w-lg overflow-hidden border border-slate-700" style="background-color: rgba(2,6,23,0.65);">
-            <div class="p-8">
-                <div id="modal-photo" 
-                     class="w-full h-56 md:h-64 mx-auto rounded-xl flex items-center justify-center photo-placeholder mb-6 overflow-hidden">
+    <!-- Profile Modal -->
+    <div id="modal" onclick="if (event.target.id === 'modal') closeModal()" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 md:p-6">
+        <div onclick="event.stopImmediatePropagation()" 
+             class="modal rounded-3xl w-full max-w-lg overflow-hidden border border-slate-700 shadow-2xl"
+             style="background-color: rgba(15, 23, 42, 0.92); backdrop-filter: blur(20px);">
+            
+            <!-- Modal Header -->
+            <div class="px-8 pt-8 pb-4 flex items-center justify-between">
+                <div>
+                    <div id="modal-roll" class="text-xs tracking-[2px] text-slate-500 font-medium"></div>
+                    <div id="modal-name" class="text-3xl font-semibold tracking-tighter"></div>
                 </div>
-                
-                <div id="modal-name" class="text-center text-2xl font-semibold tracking-tight mb-1"></div>
-                
-                <div class="text-center">
-                    <div id="modal-quote" class="text-slate-300 text-[15px] leading-relaxed italic mt-4"></div>
+                <button onclick="toggleFavoriteFromModal()" id="modal-heart"
+                        class="w-11 h-11 flex items-center justify-center text-2xl text-slate-400 hover:text-rose-400 transition-colors">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
+            </div>
+
+            <!-- Photo -->
+            <div class="px-8">
+                <div id="modal-photo" 
+                     class="w-full aspect-[16/10] md:aspect-video mx-auto rounded-2xl flex items-center justify-center photo-placeholder overflow-hidden border border-slate-700">
                 </div>
             </div>
             
-            <div class="border-t border-slate-700 px-8 py-4 flex justify-end">
+            <!-- Quote / Edit Section -->
+            <div class="px-8 pt-7 pb-2">
+                <div class="flex items-center justify-between mb-2 px-1">
+                    <div class="uppercase tracking-[2px] text-xs text-slate-500">Signature Quote</div>
+                    <button onclick="startQuoteEdit()" id="edit-quote-btn"
+                            class="text-xs flex items-center gap-x-1.5 text-slate-400 hover:text-slate-200 transition-colors">
+                        <i class="fa-solid fa-edit text-xs"></i>
+                        <span>Edit</span>
+                    </button>
+                </div>
+                
+                <div id="modal-quote" class="text-[15px] leading-relaxed text-slate-200 italic px-1"></div>
+                
+                <!-- Edit area (hidden by default) -->
+                <div id="quote-edit-area" class="hidden">
+                    <textarea id="quote-textarea" class="quote-editable w-full text-[15px] leading-relaxed" rows="3" placeholder="Write something memorable..."></textarea>
+                    <div class="flex justify-end gap-x-3 mt-3">
+                        <button onclick="cancelQuoteEdit()" 
+                                class="px-5 py-1.5 text-sm rounded-2xl text-slate-400 hover:text-slate-200">Cancel</button>
+                        <button onclick="saveQuoteEdit()" 
+                                class="px-6 py-1.5 text-sm rounded-2xl bg-slate-200 text-slate-950 font-medium">Save Quote</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-700 px-8 py-5 flex items-center justify-between">
+                <div class="flex items-center gap-x-2">
+                    <button onclick="showPreviousStudent()" 
+                            class="px-4 py-2 text-sm flex items-center gap-x-2 text-slate-400 hover:text-slate-200 transition-colors">
+                        <i class="fa-solid fa-chevron-left"></i>
+                        <span>Prev</span>
+                    </button>
+                    <button onclick="showNextStudent()" 
+                            class="px-4 py-2 text-sm flex items-center gap-x-2 text-slate-400 hover:text-slate-200 transition-colors">
+                        <span>Next</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+                
                 <button onclick="closeModal()" 
-                        class="px-6 py-2 text-sm text-slate-400 hover:text-slate-200 transition-colors">
+                        class="px-6 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors rounded-2xl hover:bg-white/5">
                     Close
                 </button>
             </div>
@@ -106,7 +233,7 @@
     </div>
 
     <script>
-        // Starfield with parallax and hover region support
+        // ==================== STARFIELD (preserved & lightly tuned) ====================
         (function() {
             const canvas = document.createElement('canvas');
             canvas.id = 'starfield';
@@ -119,7 +246,6 @@
             canvas.style.pointerEvents = 'none';
             document.body.appendChild(canvas);
 
-            // create spotlight overlay element
             const spotlight = document.createElement('div');
             spotlight.id = 'spotlight';
             spotlight.innerHTML = '<div class="mask"></div><div class="rope" aria-hidden="true"></div><div class="head" aria-hidden="true"></div>';
@@ -135,7 +261,6 @@
                 spotlight.classList.remove('active');
             }
 
-            // expose to global so card handlers can use it
             window.Spotlight = {
                 showAt: showSpotlightAt,
                 hide: hideSpotlight
@@ -145,7 +270,7 @@
             let W = 0, H = 0;
             const stars = [];
             let mouse = { x: 0, y: 0 };
-            let hoverRegion = null; // {x,y,w,h,extraStars:[]}
+            let hoverRegion = null;
 
             function dprResize() {
                 const dpr = window.devicePixelRatio || 1;
@@ -161,48 +286,35 @@
 
             function initStars() {
                 stars.length = 0;
-                // increase base density for a stronger background
-                const baseCount = Math.max(220, Math.floor((W * H) / 4500));
+                const baseCount = Math.max(240, Math.floor((W * H) / 4200));
                 for (let i = 0; i < baseCount; i++) {
                     stars.push({
                         x: Math.random() * W,
                         y: Math.random() * H,
-                        r: Math.random() * 2.2 + 0.6,
-                        alpha: Math.random() * 0.6 + 0.4,
-                        da: (Math.random() * 0.04) - 0.02,
-                        depth: Math.random() * 1.1 + 0.2
+                        r: Math.random() * 2.1 + 0.55,
+                        alpha: Math.random() * 0.55 + 0.45,
+                        da: (Math.random() * 0.035) - 0.0175,
+                        depth: Math.random() * 1.05 + 0.25
                     });
                 }
             }
 
             function addHoverExtras(region, mode = 'dark') {
                 region.extraStars = [];
-                if (mode === 'bounce') {
-                    // denser, larger, faster bouncing stars for the modal
-                    const extra = 260;
-                    for (let i = 0; i < extra; i++) {
-                        region.extraStars.push({
-                            x: region.x + Math.random() * region.w,
-                            y: region.y + Math.random() * region.h,
-                            r: Math.random() * 3.6 + 1.2,
-                            alpha: Math.random() * 0.8 + 0.6,
-                            da: (Math.random() * 0.08) - 0.04,
-                            vx: (Math.random() * 3.0) - 1.5,
-                            vy: (Math.random() * 3.0) - 1.5
-                        });
+                const extra = (mode === 'bounce') ? 280 : 240;
+                for (let i = 0; i < extra; i++) {
+                    const base = {
+                        x: region.x + Math.random() * region.w,
+                        y: region.y + Math.random() * region.h,
+                        r: Math.random() * (mode === 'bounce' ? 3.8 : 3.1) + (mode === 'bounce' ? 1.1 : 0.9),
+                        alpha: Math.random() * 0.85 + 0.55,
+                        da: (Math.random() * (mode === 'bounce' ? 0.09 : 0.055)) - (mode === 'bounce' ? 0.045 : 0.0275)
+                    };
+                    if (mode === 'bounce') {
+                        base.vx = (Math.random() * 2.8) - 1.4;
+                        base.vy = (Math.random() * 2.8) - 1.4;
                     }
-                } else {
-                    // stronger static effect for card hover
-                    const extra = 220;
-                    for (let i = 0; i < extra; i++) {
-                        region.extraStars.push({
-                            x: region.x + Math.random() * region.w,
-                            y: region.y + Math.random() * region.h,
-                            r: Math.random() * 3.0 + 1.0,
-                            alpha: Math.random() * 0.9 + 0.5,
-                            da: (Math.random() * 0.06) - 0.03
-                        });
-                    }
+                    region.extraStars.push(base);
                 }
             }
 
@@ -224,35 +336,28 @@
 
             function draw() {
                 ctx.clearRect(0, 0, W, H);
-
-                // compute parallax offset
                 const ox = (mouse.x - W / 2) / W;
                 const oy = (mouse.y - H / 2) / H;
 
-                // draw base stars
                 for (let i = 0; i < stars.length; i++) {
                     const s = stars[i];
                     s.alpha += s.da;
-                    if (s.alpha <= 0.05 || s.alpha >= 1) s.da = -s.da;
-                    const px = s.x + ox * s.depth * 60;
-                    const py = s.y + oy * s.depth * 60;
+                    if (s.alpha <= 0.08 || s.alpha >= 0.95) s.da = -s.da;
+                    const px = s.x + ox * s.depth * 55;
+                    const py = s.y + oy * s.depth * 55;
                     ctx.beginPath();
-                    ctx.globalAlpha = s.alpha * 0.95;
+                    ctx.globalAlpha = s.alpha * 0.92;
                     ctx.fillStyle = '#ffffff';
-                    // subtle glow for background stars
-                    ctx.shadowBlur = Math.min(6, s.depth * 8);
-                    ctx.shadowColor = 'rgba(255,255,255,0.55)';
+                    ctx.shadowBlur = Math.min(7, s.depth * 7.5);
+                    ctx.shadowColor = 'rgba(255,255,255,0.5)';
                     ctx.arc(Math.round(px), Math.round(py), s.r, 0, Math.PI * 2);
                     ctx.fill();
                     ctx.shadowBlur = 0;
                 }
 
-                // hover region: darken background in region and add extra stars
                 if (hoverRegion) {
-                    // draw rounded black region behind the card/modal and clip star drawing to rounded area
-                    const radius = Math.min(32, Math.floor(Math.min(hoverRegion.w, hoverRegion.h) * 0.08));
+                    const radius = Math.min(28, Math.floor(Math.min(hoverRegion.w, hoverRegion.h) * 0.09));
 
-                    // rounded rect path
                     function roundedRectPath(x, y, w, h, r) {
                         ctx.beginPath();
                         ctx.moveTo(x + r, y);
@@ -264,33 +369,30 @@
                     }
 
                     ctx.save();
-                    // fill rounded black background
-                    ctx.fillStyle = 'rgba(0,0,0,1)';
+                    ctx.fillStyle = 'rgba(2,6,23,0.96)';
                     roundedRectPath(hoverRegion.x, hoverRegion.y, hoverRegion.w, hoverRegion.h, radius);
                     ctx.fill();
 
-                    // clip to rounded path so stars render inside rounded area
                     roundedRectPath(hoverRegion.x, hoverRegion.y, hoverRegion.w, hoverRegion.h, radius);
                     ctx.clip();
 
                     if (hoverRegion.mode === 'bounce') {
                         for (let i = 0; i < hoverRegion.extraStars.length; i++) {
                             const s = hoverRegion.extraStars[i];
-                            s.x += s.vx;
-                            s.y += s.vy;
+                            s.x += s.vx; s.y += s.vy;
                             if (s.x < hoverRegion.x) { s.x = hoverRegion.x; s.vx *= -1; }
                             if (s.x > hoverRegion.x + hoverRegion.w) { s.x = hoverRegion.x + hoverRegion.w; s.vx *= -1; }
                             if (s.y < hoverRegion.y) { s.y = hoverRegion.y; s.vy *= -1; }
                             if (s.y > hoverRegion.y + hoverRegion.h) { s.y = hoverRegion.y + hoverRegion.h; s.vy *= -1; }
 
                             s.alpha += s.da;
-                            if (s.alpha <= 0.05 || s.alpha >= 1) s.da = -s.da;
+                            if (s.alpha <= 0.08 || s.alpha >= 0.95) s.da = -s.da;
 
                             ctx.beginPath();
                             ctx.globalAlpha = Math.min(1, s.alpha);
-                            ctx.fillStyle = '#ffffff';
-                            ctx.shadowBlur = 30;
-                            ctx.shadowColor = 'rgba(255,255,255,0.98)';
+                            ctx.fillStyle = '#fff';
+                            ctx.shadowBlur = 32;
+                            ctx.shadowColor = 'rgba(255,255,255,0.95)';
                             ctx.arc(Math.round(s.x), Math.round(s.y), s.r, 0, Math.PI * 2);
                             ctx.fill();
                             ctx.shadowBlur = 0;
@@ -299,18 +401,17 @@
                         for (let i = 0; i < hoverRegion.extraStars.length; i++) {
                             const s = hoverRegion.extraStars[i];
                             s.alpha += s.da;
-                            if (s.alpha <= 0.05 || s.alpha >= 1) s.da = -s.da;
+                            if (s.alpha <= 0.08 || s.alpha >= 0.95) s.da = -s.da;
                             ctx.beginPath();
                             ctx.globalAlpha = Math.min(1, s.alpha);
-                            ctx.fillStyle = '#ffffff';
-                            ctx.shadowBlur = 26;
-                            ctx.shadowColor = 'rgba(255,255,255,0.96)';
-                            ctx.arc(Math.round(s.x + ox * 8), Math.round(s.y + oy * 8), s.r, 0, Math.PI * 2);
+                            ctx.fillStyle = '#fff';
+                            ctx.shadowBlur = 24;
+                            ctx.shadowColor = 'rgba(255,255,255,0.9)';
+                            ctx.arc(Math.round(s.x + ox * 7), Math.round(s.y + oy * 7), s.r, 0, Math.PI * 2);
                             ctx.fill();
                             ctx.shadowBlur = 0;
                         }
                     }
-
                     ctx.restore();
                 }
 
@@ -324,9 +425,8 @@
                 mouse.y = e.clientY;
             });
 
-            // expose API for cards to set hover region
             window.Starfield = {
-                setHoverRegion: (rect) => setHoverRegion(rect),
+                setHoverRegion: (rect, opts) => setHoverRegion(rect, opts),
                 clearHoverRegion: () => clearHoverRegion()
             };
 
@@ -334,175 +434,182 @@
             requestAnimationFrame(draw);
         })();
 
-        // Simple placeholder data — only entries with linked pictures
-        const students = [
-            {
-                id: 13,
-                name: "Annanya Singh",
-                initials: "AS",
-                image: "Pictures/Annanya.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 14,
-                name: "Nirnay Bhanushali",
-                initials: "NB",
-                image: "Pictures/Nirnay.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 15,
-                name: "Sansita Sahu",
-                initials: "SS",
-                image: "Pictures/Sansita.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 16,
-                name: "Akshi Shah",
-                initials: "AS",
-                image: "Pictures/Akshi.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 17,
-                name: "Swaraj Naik",
-                initials: "SN",
-                image: "Pictures/Swaraj Naik.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 18,
-                name: "Aditya Manik",
-                initials: "AM",
-                image: "Pictures/Aditya Manik.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 19,
-                name: "Anshuman Modgil",
-                initials: "AG",
-                image: "Pictures/Anshuman Modgil.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 20,
-                name: "Pranit Parakh",
-                initials: "PP",
-                image: "Pictures/Pranit Parakh.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 21,
-                name: "Sanika Moghe",
-                initials: "SM",
-                image: "Pictures/Sanika Moghe.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 22,
-                name: "Suyash VM",
-                initials: "SV",
-                image: "Pictures/Suyash VM.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 23,
-                name: "Tapas Mehta",
-                initials: "TM",
-                image: "Pictures/Tapas Mehta.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 24,
-                name: "Aneek Nagpal",
-                initials: "AN",
-                image: "Pictures/Aneek Nagpal.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 25,
-                name: "Riya Surve",
-                initials: "RS",
-                image: "Pictures/Riya Surve.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 26,
-                name: "Saumya Verma",
-                initials: "SV",
-                image: "Pictures/Saumya Verma.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 27,
-                name: "Aditi Sharma",
-                initials: "AS",
-                image: "Pictures/Aditi Sharma.jpg",
-                quote: "Placeholder"
-            },
-            {
-                id: 28,
-                name: "Vidhi Sidana",
-                initials: "VS",
-                image: "Pictures/Vidhi Sidana.jpg",
-                quote: "Placeholder"
-            }
+        // ==================== DATA & STATE ====================
+        let students = [
+            { id: 13, name: "Annanya Singh", initials: "AS", image: "Pictures/Annanya.jpg", quote: "Placeholder" },
+            { id: 14, name: "Nirnay Bhanushali", initials: "NB", image: "Pictures/Nirnay.jpg", quote: "Placeholder" },
+            { id: 15, name: "Sansita Sahu", initials: "SS", image: "Pictures/Sansita.jpg", quote: "Placeholder" },
+            { id: 16, name: "Akshi Shah", initials: "AS", image: "Pictures/Akshi.jpg", quote: "Placeholder" },
+            { id: 17, name: "Swaraj Naik", initials: "SN", image: "Pictures/Swaraj Naik.jpg", quote: "Placeholder" },
+            { id: 18, name: "Aditya Manik", initials: "AM", image: "Pictures/Aditya Manik.jpg", quote: "Placeholder" },
+            { id: 19, name: "Anshuman Modgil", initials: "AG", image: "Pictures/Anshuman Modgil.jpg", quote: "Placeholder" },
+            { id: 20, name: "Pranit Parakh", initials: "PP", image: "Pictures/Pranit Parakh.jpg", quote: "Placeholder" },
+            { id: 21, name: "Sanika Moghe", initials: "SM", image: "Pictures/Sanika Moghe.jpg", quote: "Placeholder" },
+            { id: 22, name: "Suyash VM", initials: "SV", image: "Pictures/Suyash VM.jpg", quote: "Placeholder" },
+            { id: 23, name: "Tapas Mehta", initials: "TM", image: "Pictures/Tapas Mehta.jpg", quote: "Placeholder" },
+            { id: 24, name: "Aneek Nagpal", initials: "AN", image: "Pictures/Aneek Nagpal.jpg", quote: "Placeholder" },
+            { id: 25, name: "Riya Surve", initials: "RS", image: "Pictures/Riya Surve.jpg", quote: "Placeholder" },
+            { id: 26, name: "Saumya Verma", initials: "SV", image: "Pictures/Saumya Verma.jpg", quote: "Placeholder" },
+            { id: 27, name: "Aditi Sharma", initials: "AS", image: "Pictures/Aditi Sharma.jpg", quote: "Placeholder" },
+            { id: 28, name: "Vidhi Sidana", initials: "VS", image: "Pictures/Vidhi Sidana.jpg", quote: "Placeholder" }
         ];
 
+        let favorites = new Set();
+        let customQuotes = {};
+        let showFavoritesOnly = false;
         let currentStudentId = null;
+        let currentModalIndex = 0; // index in students array
 
-        function renderCards(filteredStudents) {
+        function loadFromStorage() {
+            try {
+                const favs = localStorage.getItem('yearbook_favorites');
+                if (favs) favorites = new Set(JSON.parse(favs));
+
+                const quotes = localStorage.getItem('yearbook_custom_quotes');
+                if (quotes) customQuotes = JSON.parse(quotes);
+            } catch (e) {
+                console.warn('Storage load failed', e);
+            }
+        }
+
+        function saveToStorage() {
+            try {
+                localStorage.setItem('yearbook_favorites', JSON.stringify([...favorites]));
+                localStorage.setItem('yearbook_custom_quotes', JSON.stringify(customQuotes));
+            } catch (e) {
+                console.warn('Storage save failed', e);
+            }
+        }
+
+        function getDisplayQuote(student) {
+            return customQuotes[student.id] || student.quote;
+        }
+
+        function updateStudentCount() {
+            const el = document.getElementById('student-count');
+            if (el) el.textContent = students.length;
+        }
+
+        function updateFavCount() {
+            const el = document.getElementById('fav-count');
+            if (el) el.textContent = favorites.size;
+        }
+
+        // ==================== RENDERING ====================
+        function createPhotoElement(student, sizeClass = 'w-full h-full') {
+            const container = document.createElement('div');
+            container.className = `photo-placeholder ${sizeClass} rounded-[1.5rem] flex items-center justify-center overflow-hidden`;
+
+            if (student.image) {
+                const img = document.createElement('img');
+                img.src = student.image;
+                img.alt = student.name;
+                img.className = 'w-full h-full object-cover rounded-[1.5rem]';
+                img.onerror = () => handleImageError(img, student);
+                container.appendChild(img);
+            } else {
+                renderInitialsFallback(container, student);
+            }
+            return container;
+        }
+
+        function handleImageError(imgElement, student) {
+            const parent = imgElement.parentElement;
+            if (!parent) return;
+            parent.innerHTML = '';
+            renderInitialsFallback(parent, student);
+        }
+
+        function renderInitialsFallback(container, student) {
+            container.innerHTML = `
+                <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 rounded-[1.5rem]">
+                    <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-slate-700/80 flex items-center justify-center mb-3 border border-slate-600/60">
+                        <span class="profile-initials text-slate-200 text-5xl font-semibold tracking-[-2.5px]">${student.initials}</span>
+                    </div>
+                    <div class="text-center px-3">
+                        <div class="text-xs text-slate-400 tracking-wide">${student.name.split(' ').slice(-1)[0]}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCards(filteredList) {
             const grid = document.getElementById('grid');
+            const empty = document.getElementById('empty-state');
             grid.innerHTML = '';
 
-            const list = filteredStudents || students;
+            let list = filteredList || students;
+
+            if (showFavoritesOnly) {
+                list = list.filter(s => favorites.has(s.id));
+            }
+
+            if (list.length === 0) {
+                empty.classList.remove('hidden');
+                grid.classList.add('hidden');
+                return;
+            } else {
+                empty.classList.add('hidden');
+                grid.classList.remove('hidden');
+            }
 
             list.forEach(student => {
                 const card = document.createElement('div');
-                card.className = `yearbook-card rounded-3xl overflow-hidden border border-slate-700 cursor-pointer group`;
+                card.className = `yearbook-card rounded-3xl overflow-hidden border border-slate-700 cursor-pointer group relative`;
+                
+                const isFav = favorites.has(student.id);
+                const displayQuote = getDisplayQuote(student);
 
                 card.innerHTML = `
                     <div class="p-5 pb-6">
-                        <!-- Photo Placeholder -->
-                        <div class="photo-placeholder w-full aspect-square min-h-[220px] rounded-[1.5rem] flex items-center justify-center mb-5 overflow-hidden">
-                            ${student.image ? `
-                                <img src="${student.image}" alt="${student.name}" class="w-full h-full object-cover rounded-[1.5rem]" />
-                            ` : `
-                                <div class="w-24 h-24 md:w-28 md:h-28 rounded-full bg-slate-800/60 flex items-center justify-center border border-slate-600/50">
-                                    <span class="profile-initials text-slate-200 text-5xl font-semibold tracking-[-2px]">${student.initials}</span>
-                                </div>
-                            `}
+                        <div class="photo-placeholder w-full aspect-square min-h-[210px] rounded-[1.5rem] flex items-center justify-center mb-5 overflow-hidden relative">
+                            <!-- Photo injected via JS -->
                         </div>
 
-                        <!-- Name -->
-                        <div class="student-name text-xl mb-2 tracking-tight">${student.name}</div>
+                        <div class="flex items-start justify-between gap-x-3">
+                            <div class="student-name text-xl tracking-tight pr-2">${student.name}</div>
+                        </div>
 
-                        <!-- Quote directly below photo -->
-                        <div class="quote-text">
-                            “${student.quote}”
+                        <div class="quote-text mt-2.5 pr-1">
+                            “${displayQuote}”
                         </div>
                     </div>
                 `;
 
-                card.onclick = () => showModal(student.id);
+                // Inject photo
+                const photoContainer = card.querySelector('.photo-placeholder');
+                const photoEl = createPhotoElement(student, 'w-full h-full');
+                photoContainer.replaceWith(photoEl);
 
-                // hover handlers to trigger starfield region effects
-                // spotlight + starfield interactions
+                // Favorite heart button
+                const heart = document.createElement('button');
+                heart.className = `fav-btn ${isFav ? 'favorited' : ''}`;
+                heart.innerHTML = `<i class="fa-${isFav ? 'solid' : 'regular'} fa-heart"></i>`;
+                heart.onclick = (e) => {
+                    e.stopImmediatePropagation();
+                    toggleFavorite(student.id, heart, card);
+                };
+                card.appendChild(heart);
+
+                // Click opens modal
+                card.onclick = () => {
+                    const idx = students.findIndex(s => s.id === student.id);
+                    showModal(student.id, idx);
+                };
+
+                // Starfield + spotlight hover
                 card.addEventListener('mouseenter', (ev) => {
                     const rect = card.getBoundingClientRect();
-                    // position spotlight slightly below the top of the card
                     const sx = Math.round(rect.left + rect.width / 2);
-                    const sy = Math.round(Math.max(96, rect.top + rect.height * 0.12));
+                    const sy = Math.round(Math.max(90, rect.top + rect.height * 0.1));
                     if (window.Spotlight) window.Spotlight.showAt(sx, sy);
                     if (window.Starfield) window.Starfield.setHoverRegion(rect, { mode: 'dark' });
                 });
 
                 card.addEventListener('mousemove', (ev) => {
-                    // gentle follow: move spotlight horizontally with the cursor within the card
                     const rect = card.getBoundingClientRect();
                     const sx = Math.round(rect.left + (ev.clientX - rect.left));
-                    const sy = Math.round(Math.max(96, rect.top + rect.height * 0.12));
+                    const sy = Math.round(Math.max(90, rect.top + rect.height * 0.1));
                     if (window.Spotlight) window.Spotlight.showAt(sx, sy);
                 });
 
@@ -515,12 +622,23 @@
             });
         }
 
-        function scrambleStudents() {
-            for (let i = students.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [students[i], students[j]] = [students[j], students[i]];
+        function applySortAndRender() {
+            const mode = document.getElementById('sort-select').value;
+            let sorted = [...students];
+
+            if (mode === 'name-asc') {
+                sorted.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (mode === 'name-desc') {
+                sorted.sort((a, b) => b.name.localeCompare(a.name));
+            } else if (mode === 'shuffle') {
+                for (let i = sorted.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [sorted[i], sorted[j]] = [sorted[j], sorted[i]];
+                }
             }
-            renderCards(students);
+
+            // If favorites filter active, re-apply it after sort
+            renderCards(sorted);
         }
 
         function filterCards() {
@@ -531,43 +649,122 @@
                 return;
             }
 
-            const filtered = students.filter(s => 
-                s.name.toLowerCase().includes(term) || 
-                s.quote.toLowerCase().includes(term)
-            );
+            const filtered = students.filter(s => {
+                const q = getDisplayQuote(s).toLowerCase();
+                return s.name.toLowerCase().includes(term) || q.includes(term);
+            });
 
             renderCards(filtered);
         }
 
-        function showModal(id) {
+        // ==================== FAVORITES ====================
+        function toggleFavorite(id, heartEl = null, cardEl = null) {
+            if (favorites.has(id)) {
+                favorites.delete(id);
+            } else {
+                favorites.add(id);
+            }
+            saveToStorage();
+            updateFavCount();
+
+            // Update heart UI if provided
+            if (heartEl) {
+                const isNowFav = favorites.has(id);
+                heartEl.classList.toggle('favorited', isNowFav);
+                heartEl.innerHTML = `<i class="fa-${isNowFav ? 'solid' : 'regular'} fa-heart"></i>`;
+            }
+
+            // If currently filtering favorites and unfavorited last one, re-render
+            if (showFavoritesOnly && !favorites.has(id)) {
+                renderCards(students);
+            } else if (cardEl) {
+                // gentle refresh of that card's heart only (already done)
+            }
+        }
+
+        function toggleFavoriteFromModal() {
+            if (!currentStudentId) return;
+            const heartIcon = document.querySelector('#modal-heart i');
+            
+            if (favorites.has(currentStudentId)) {
+                favorites.delete(currentStudentId);
+            } else {
+                favorites.add(currentStudentId);
+            }
+            saveToStorage();
+            updateFavCount();
+
+            // Update icon
+            if (heartIcon) {
+                const isFav = favorites.has(currentStudentId);
+                heartIcon.className = isFav ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+                heartIcon.parentElement.style.color = isFav ? '#f43f5e' : '';
+            }
+
+            // Refresh grid to show updated hearts
+            renderCards(students);
+        }
+
+        function toggleFavoritesFilter() {
+            showFavoritesOnly = !showFavoritesOnly;
+            const btn = document.getElementById('fav-filter-btn');
+            
+            if (showFavoritesOnly) {
+                btn.classList.add('!bg-rose-950/70', '!border-rose-800', 'text-rose-300');
+            } else {
+                btn.classList.remove('!bg-rose-950/70', '!border-rose-800', 'text-rose-300');
+            }
+            renderCards(students);
+        }
+
+        // ==================== MODAL ====================
+        function showModal(id, indexInStudents = null) {
             const student = students.find(s => s.id === id);
             if (!student) return;
 
             currentStudentId = id;
+            currentModalIndex = (indexInStudents !== null) ? indexInStudents : students.findIndex(s => s.id === id);
 
+            // Name & basic info
             document.getElementById('modal-name').textContent = student.name;
-            document.getElementById('modal-quote').innerHTML = `“${student.quote}”`;
+            document.getElementById('modal-roll').textContent = `ID • ${student.id}`;
 
-            const photo = document.getElementById('modal-photo');
-            photo.innerHTML = student.image ? `
-                <img src="${student.image}" alt="${student.name}" class="w-full h-full object-cover rounded-xl" />
-            ` : `
-                <span class="profile-initials text-slate-200 text-[42px] font-semibold tracking-[-2.5px]">${student.initials}</span>
-            `;
+            // Photo
+            const photoContainer = document.getElementById('modal-photo');
+            photoContainer.innerHTML = '';
+            const photoEl = createPhotoElement(student, 'w-full h-full');
+            photoContainer.appendChild(photoEl.firstChild || photoEl); // handle if already div
 
-            // hide spotlight while modal is open
+            // Quote
+            const quoteEl = document.getElementById('modal-quote');
+            quoteEl.innerHTML = `“${getDisplayQuote(student)}”`;
+            quoteEl.classList.remove('hidden');
+            document.getElementById('quote-edit-area').classList.add('hidden');
+            document.getElementById('edit-quote-btn').classList.remove('hidden');
+
+            // Heart state
+            const heartIcon = document.querySelector('#modal-heart i');
+            if (heartIcon) {
+                const isFav = favorites.has(id);
+                heartIcon.className = isFav ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+                heartIcon.parentElement.style.color = isFav ? '#f43f5e' : '';
+            }
+
+            // Hide spotlight
             if (window.Spotlight) window.Spotlight.hide();
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modal').classList.add('flex');
 
-            // trigger starfield bouncing-stars inside modal
+            const modal = document.getElementById('modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            // Activate bouncing stars inside modal
             setTimeout(() => {
                 const dialog = document.querySelector('#modal .modal');
                 if (dialog && window.Starfield) {
                     const rect = dialog.getBoundingClientRect();
                     window.Starfield.setHoverRegion(rect, { mode: 'bounce' });
                 }
-            }, 60);
+            }, 80);
         }
 
         function closeModal() {
@@ -577,58 +774,240 @@
             currentStudentId = null;
             if (window.Starfield) window.Starfield.clearHoverRegion();
             if (window.Spotlight) window.Spotlight.hide();
+            
+            // Refresh grid in case quote or fav changed
+            renderCards(students);
+        }
+
+        function startQuoteEdit() {
+            const student = students.find(s => s.id === currentStudentId);
+            if (!student) return;
+
+            document.getElementById('modal-quote').classList.add('hidden');
+            document.getElementById('edit-quote-btn').classList.add('hidden');
+
+            const editArea = document.getElementById('quote-edit-area');
+            editArea.classList.remove('hidden');
+
+            const textarea = document.getElementById('quote-textarea');
+            textarea.value = getDisplayQuote(student);
+            textarea.focus();
+            textarea.select();
+        }
+
+        function cancelQuoteEdit() {
+            document.getElementById('quote-edit-area').classList.add('hidden');
+            document.getElementById('modal-quote').classList.remove('hidden');
+            document.getElementById('edit-quote-btn').classList.remove('hidden');
+        }
+
+        function saveQuoteEdit() {
+            const textarea = document.getElementById('quote-textarea');
+            const newQuote = textarea.value.trim();
+
+            if (!newQuote || !currentStudentId) {
+                cancelQuoteEdit();
+                return;
+            }
+
+            customQuotes[currentStudentId] = newQuote;
+            saveToStorage();
+
+            // Update modal view
+            const quoteEl = document.getElementById('modal-quote');
+            quoteEl.innerHTML = `“${newQuote}”`;
+            quoteEl.classList.remove('hidden');
+
+            document.getElementById('quote-edit-area').classList.add('hidden');
+            document.getElementById('edit-quote-btn').classList.remove('hidden');
+
+            showToast('Quote saved. It will appear on this profile going forward.');
+
+            // Refresh any visible cards
+            renderCards(students);
+        }
+
+        function showPreviousStudent() {
+            if (currentStudentId === null) return;
+            let newIndex = currentModalIndex - 1;
+            if (newIndex < 0) newIndex = students.length - 1;
+            const prevStudent = students[newIndex];
+            showModal(prevStudent.id, newIndex);
+        }
+
+        function showNextStudent() {
+            if (currentStudentId === null) return;
+            let newIndex = currentModalIndex + 1;
+            if (newIndex >= students.length) newIndex = 0;
+            const nextStudent = students[newIndex];
+            showModal(nextStudent.id, newIndex);
+        }
+
+        // ==================== UTILITIES ====================
+        function showToast(message) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <i class="fa-solid fa-check-circle text-emerald-400"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.transition = 'all 0.2s ease';
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 180);
+            }, 2600);
+        }
+
+        function scrambleStudents() {
+            // Visual + data shuffle
+            for (let i = students.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [students[i], students[j]] = [students[j], students[i]];
+            }
+            
+            // Update sort select to reflect shuffle state
+            const sortSel = document.getElementById('sort-select');
+            if (sortSel) sortSel.value = 'shuffle';
+
+            renderCards(students);
+            showToast('Order shuffled beautifully.');
+        }
+
+        function surpriseMe() {
+            if (!students.length) return;
+            const randomIndex = Math.floor(Math.random() * students.length);
+            const randomStudent = students[randomIndex];
+            showModal(randomStudent.id, randomIndex);
+        }
+
+        function applyInitialSort() {
+            // Default to name ascending on first load
+            const sortSel = document.getElementById('sort-select');
+            if (sortSel) {
+                sortSel.value = 'name-asc';
+                // We will sort in renderCards or call apply
+            }
+            // Initial render will be called after
+        }
+
+        function printYearbook() {
+            // Trigger browser print with nice styles applied via CSS
+            window.print();
+        }
+
+        function resetCustomizations() {
+            if (!confirm('Reset all favorites and custom quotes? This cannot be undone.')) return;
+
+            favorites.clear();
+            customQuotes = {};
+            localStorage.removeItem('yearbook_favorites');
+            localStorage.removeItem('yearbook_custom_quotes');
+
+            showFavoritesOnly = false;
+            document.getElementById('fav-filter-btn').classList.remove('!bg-rose-950/70', '!border-rose-800', 'text-rose-300');
+
+            updateFavCount();
+            renderCards(students);
+            showToast('All customizations have been cleared.');
+        }
+
+        // ==================== KEYBOARD & INIT ====================
+        function initKeyboard() {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('modal');
+                    if (modal && !modal.classList.contains('hidden')) {
+                        closeModal();
+                    } else {
+                        // close welcome if open
+                        const welcome = document.getElementById('welcome-dialog');
+                        if (welcome && !welcome.classList.contains('hidden')) welcome.classList.add('hidden');
+                    }
+                }
+
+                if (e.key === '/' && document.activeElement.tagName === 'BODY') {
+                    e.preventDefault();
+                    const search = document.getElementById('search-input');
+                    if (search) search.focus();
+                }
+
+                // Arrow navigation when modal open
+                const modal = document.getElementById('modal');
+                if (modal && !modal.classList.contains('hidden')) {
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        showPreviousStudent();
+                    }
+                    if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        showNextStudent();
+                    }
+                }
+            });
+
+            // Allow Enter to save when editing quote
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && document.getElementById('quote-edit-area') && 
+                    !document.getElementById('quote-edit-area').classList.contains('hidden')) {
+                    if (e.target.id === 'quote-textarea') {
+                        e.preventDefault();
+                        saveQuoteEdit();
+                    }
+                }
+            });
         }
 
         function openWelcomeDialog() {
             const dialog = document.getElementById('welcome-dialog');
             const button = document.getElementById('welcome-ok');
-            const countdown = document.getElementById('welcome-countdown');
+            const countdownEl = document.getElementById('welcome-countdown');
 
-            if (!dialog || !button || !countdown) return;
+            if (!dialog || !button || !countdownEl) return;
+
             dialog.classList.remove('hidden');
 
-            let remaining = 3;
-            countdown.textContent = `Button activates in ${remaining} seconds...`;
+            let remaining = 2;
+            countdownEl.textContent = `Button activates in ${remaining} seconds...`;
             button.disabled = true;
 
-            const intervalId = setInterval(() => {
+            const interval = setInterval(() => {
                 remaining -= 1;
                 if (remaining > 0) {
-                    countdown.textContent = `Button activates in ${remaining} seconds...`;
+                    countdownEl.textContent = `Button activates in ${remaining} seconds...`;
                 } else {
-                    clearInterval(intervalId);
-                    countdown.textContent = 'You can now continue.';
+                    clearInterval(interval);
+                    countdownEl.textContent = 'You can now begin.';
                     button.disabled = false;
                 }
-            }, 1000);
+            }, 900);
 
-            button.addEventListener('click', () => {
+            button.onclick = () => {
                 if (!button.disabled) {
                     dialog.classList.add('hidden');
                 }
-            });
+            };
         }
 
         function init() {
-            scrambleStudents();
+            loadFromStorage();
+            updateStudentCount();
+            updateFavCount();
+            applyInitialSort();
 
-            // Keyboard shortcuts
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    const main = document.getElementById('modal');
-                    if (main && !main.classList.contains('hidden')) closeModal();
-                }
+            // Initial render (sorted by name)
+            const initialSorted = [...students].sort((a, b) => a.name.localeCompare(b.name));
+            renderCards(initialSorted);
 
-                if (e.key === '/' && document.activeElement.tagName === 'BODY') {
-                    e.preventDefault();
-                    document.getElementById('search-input').focus();
-                }
-            });
-
+            initKeyboard();
             openWelcomeDialog();
 
-            // Sync search placeholder hint
-            console.log('%c[Yearbook] Simple showcase version ready. Edit the students array to customize.', 'color:#64748b');
+            // Optional: subtle hint in console
+            console.log('%c[Yearbook 2026] Interactive edition ready. Favorites and quotes are persisted locally.', 'color:#475569');
         }
 
         document.addEventListener('DOMContentLoaded', init);
